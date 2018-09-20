@@ -5,7 +5,6 @@ def find(img):
     screenCnt = None
     # chuyển sang ảnh gray là làm mờ
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-
     gray = cv2.GaussianBlur(gray,(7,7),0)
     
     # Phát hiện các cạnh trong hình
@@ -65,10 +64,18 @@ def rotateAndCrop(screenCnt,orig):
     M = cv2.getPerspectiveTransform(rect, dst)
     warp = cv2.warpPerspective(orig, M, (maxWidth, maxHeight))
     
-    cv2.imwrite('diem.png',warp)
+    return warp
     #cv2.imshow('khung diem',warp)
     #cv2.waitKey(0)
     #cv2.destroyAllWindows()
 
-
-
+def remove_Border(img):
+    h = img.shape[0]
+    w = img.shape[1]
+    ratio = 300.0/h
+    h = int(h*ratio)
+    w = int(w*ratio)
+    dim = (w, h)
+    img = cv2.resize(img, (w,h), interpolation = cv2.INTER_AREA)
+    crop = img[30:(h-30),30:(w-30)]
+    return crop
