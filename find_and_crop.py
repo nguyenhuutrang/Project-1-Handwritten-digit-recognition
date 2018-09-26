@@ -16,7 +16,7 @@ def find(img):
     
     # Sử dụng find contours để phát hiện khung hình chữ nhật ghi điểm
     _, contours, _ = cv2.findContours(closed.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-   
+    contours = sorted(contours, key = cv2.contourArea, reverse = True)
     for contour in contours:
         approx = cv2.approxPolyDP(contour,0.01*cv2.arcLength(contour,True),True)
         if len(approx) == 4:
@@ -77,5 +77,14 @@ def remove_Border(img):
     w = int(w*ratio)
     dim = (w, h)
     img = cv2.resize(img, (w,h), interpolation = cv2.INTER_AREA)
-    crop = img[30:(h-30),30:(w-30)]
-    return crop
+    #crop = img[30:(h-30),30:(w-30)]
+    MSSV = img[30:(h-30),30:(int(w/2 - 20))]
+    DIEM = img[30:(h-30),(int(w/2)+20):(w-30)]
+    return MSSV,DIEM
+
+def xuLyText(text):
+    result = ''
+    for i in range(len(text)):
+	    if (text[i] >= '0' and text[i] <= '9') or text[i] == '.' or text[i] == ',':
+		    result += text[i]
+    return result
